@@ -1,0 +1,13 @@
+{
+  "name": "weather-app-oss",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "preview": "npx serve -s docs -l 8080",
+    "lint": "eslint docs/js/index.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.13.0",
+    "serve": "^14.2.3"
+  }
+}
