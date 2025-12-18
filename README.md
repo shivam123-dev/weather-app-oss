@@ -1,2 +1,34 @@
-# weather-app-oss
-Private repository prepared for open-source compliance for the Weather App project. Contains OSS docs, templates, and guidance.
+# Weather App OSS
+
+Private repository prepared for open-source compliance for the Weather App project. This repo contains community health files, contribution guidelines, and templates to support a healthy open-source workflow.
+
+- Project homepage: https://github.com/shivam123-dev/weather-app.github.io
+
+## Overview
+
+This repository hosts the open-source governance files for the Weather App. It is currently private but structured for easy transition to public/open-source.
+
+## What's Included
+
+- `CODE_OF_CONDUCT.md`: Expected standards and reporting process
+- `CONTRIBUTING.md`: How to contribute effectively
+- `SECURITY.md`: Responsible disclosure guidelines
+- `.github/ISSUE_TEMPLATE/`: Issue templates for bugs, features, and tasks
+- `.github/PULL_REQUEST_TEMPLATE/pull_request_template.md`: Pull request template
+- `LICENSE`: MIT License
+
+## Contributing
+
+Please read `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` before opening issues or pull requests.
+
+## Code of Conduct
+
+We adopt the Contributor Covenant. See `CODE_OF_CONDUCT.md`.
+
+## Security
+
+Please follow the guidance in `SECURITY.md` for reporting vulnerabilities.
+
+## License
+
+Licensed under the MIT License. See `LICENSE` for details.
