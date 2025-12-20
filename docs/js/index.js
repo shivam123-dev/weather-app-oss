@@ -9,7 +9,7 @@ const GITHUB_API = {
 };
 
 const search = document.getElementById('submit');
-const searchCity = document. getElementById('searchCity');
+const searchCity = document.getElementById('searchCity');
 
 search.addEventListener('click', (event) => {
     let cityName = searchCity.value;
@@ -29,11 +29,11 @@ function showReport(weatherData) {
     
     // Display temperature
     let tempElement = document.getElementById('main');
-    tempElement.innerHTML = `${Math.round(weatherData.main. temp)} &deg;C`;
+    tempElement.innerHTML = `${Math.round(weatherData.main.temp)} &deg;C`;
     
     // Display weather description
     let weatherTextElement = document.getElementById('weather-text');
-    weatherTextElement. innerHTML = weatherData.weather[0]. main;
+    weatherTextElement.innerHTML = weatherData.weather[0].main;
 }
 
 // Fetch and display collaborators

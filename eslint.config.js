@@ -7,8 +7,7 @@ export default [
             globals: {
                 document: "readonly",
                 fetch: "readonly",
-                console: "readonly",
-                DOMContentLoaded: "readonly"
+                console: "readonly"
             }
         },
         rules: {}
