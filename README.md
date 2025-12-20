@@ -1,63 +1,96 @@
-# Weather App OSS
+# Weather App (OSS)
 
-Repository prepared for open-source compliance for the Weather App project. This repo contains community health files, contribution guidelines, and templates to support a healthy open-source workflow.
+A simple, client-side weather app that fetches current conditions from OpenWeather API. No Node.js or backend required — just HTML, CSS, and JavaScript inside `docs/`.
 
-- Project homepage: [https://github.com/shivam123-dev/weather-app.github.io](https://github.com/shivam123-dev/weather-app-oss)
+- Project repository: https://github.com/shivam123-dev/weather-app-oss
 
 ## Overview
 
-This repository hosts the open-source governance files for the Weather App and the static site under `docs/`. It is currently private but structured for easy transition to public/open-source.
+This project is a static site located under `docs/`:
+- `docs/index.html`: UI markup and inputs
+- `docs/css/style.css`: Styling
+- `docs/js/index.js`: Client-side logic using `fetch` to call OpenWeather
 
-## What's Included
+Search for a city, and the app shows:
+- City and country
+- Temperature in °C
+- Weather description
 
-- `CODE_OF_CONDUCT.md`: Expected standards and reporting process
-- `CONTRIBUTING.md`: How to contribute effectively
-- `SECURITY.md`: Responsible disclosure guidelines
-- `.github/ISSUE_TEMPLATE/`: Issue templates for bugs, features, and tasks
-- `.github/PULL_REQUEST_TEMPLATE/pull_request_template.md`: Pull request template
-- `LICENSE`: MIT License
-- `docs/`: Static site (HTML/CSS/JS)
+## Requirements
 
-## Local Preview
+- A modern browser (Chrome, Edge, Firefox, Safari)
+- An OpenWeather API key: https://openweathermap.org/api
 
-- Requirements: Node.js 18+ recommended
-- Commands:
+## Setup
 
-```pwsh
-# Install dev dependencies
-npm install
-# Serve static site at http://localhost:8080
-npm run preview
+1) Get an API key from OpenWeather.
+2) Open `docs/js/index.js` and replace the value of `API.key` with your key.
+
+```javascript
+const API = {
+	baseUrl: 'https://api.openweathermap.org/data/2.5/weather',
+	key: 'YOUR_OPENWEATHER_API_KEY'
+};
 ```
 
-Open `http://localhost:8080/docs/index.html` in your browser.
+## Run Locally
 
-## Continuous Integration
+No build step is required. You can open the site directly:
 
-GitHub Actions runs a basic CI on push/PR:
-- Node setup
-- ESLint on `docs/js/index.js`
+- Double-click `docs/index.html`, or run:
 
-See `.github/workflows/ci.yml`.
+```pwsh
+Start-Process "$PWD\docs\index.html"
+```
 
-## Static Preview (GitHub Pages)
+Optional (if Node.js is installed):
 
-A deploy workflow is set up to publish `docs/` to GitHub Pages (`.github/workflows/deploy-pages.yml`).
-- You may need to enable Pages in repository settings.
-- For private repositories, visibility may require a paid plan or making the repo public.
+```pwsh
+npx serve -s docs -l 8080
+# Then visit http://localhost:8080
+```
+
+## How It Works
+
+`docs/js/index.js` calls the OpenWeather endpoint:
+
+```
+GET https://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units=metric
+```
+
+The response is parsed and rendered into elements with IDs `city`, `temp`, and `weather-text` in `index.html`.
+
+## Hide Your API Key (Recommended)
+
+GitHub Pages is static and cannot keep secrets. To avoid exposing your OpenWeather key in client code, use a tiny proxy (e.g., Cloudflare Workers) that stores the key securely and forwards requests.
+
+Steps (Cloudflare Workers):
+- Copy `serverless/cloudflare-worker.js` to a Workers project.
+- Set a secret: `OPENWEATHER_KEY` to your API key.
+- Deploy and note your worker URL, e.g. `https://YOUR_WORKER_SUBDOMAIN.workers.dev`.
+- In `docs/js/index.js`, set `API.proxyUrl` to `https://YOUR_WORKER_SUBDOMAIN.workers.dev/weather`.
+
+The worker adds CORS headers and proxies requests to OpenWeather using your secret key. Your GitHub Pages site continues to work without exposing the key publicly.
+
+## Security & Privacy Notes
+
+- Client-side API keys are visible in the browser. Use a restricted key (e.g., domain/IP restrictions) and avoid sharing sensitive keys publicly.
+- This app only sends requests to OpenWeather and does not store personal data.
+
+## Troubleshooting
+
+- Empty results: ensure your API key is valid and not rate-limited.
+- Network errors: check internet connectivity and that the request URL matches the documented endpoint.
+- Content not updating: verify the element IDs in `index.html` match those used in `index.js`.
 
 ## Contributing
 
-Please read [`CODE_OF_CONDUCT`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CODE_OF_CONDUCT.md) and [`CONTRIBUTING`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CONTRIBUTING.md) before opening issues or pull requests.
-
-## Code of Conduct
-
-We adopt the Contributor Covenant. See [`CODE_OF_CONDUCT`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CODE_OF_CONDUCT.md).
+Please read [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) and [`CONTRIBUTING.md`](./CONTRIBUTING.md) before opening issues or pull requests.
 
 ## Security
 
-Please follow the guidance in [`SECURITY`](https://github.com/shivam123-dev/weather-app-oss/blob/main/SECURITY.md) for reporting vulnerabilities.
+Report vulnerabilities per [`SECURITY.md`](./SECURITY.md).
 
 ## License
 
-Licensed under the MIT License. See [`LICENSE`](https://github.com/shivam123-dev/weather-app-oss/blob/main/SECURITY.md) for details.
+Licensed under the MIT License. See [`LICENSE`](./LICENSE).
