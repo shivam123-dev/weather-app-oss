@@ -9,12 +9,13 @@ A simple, client-side weather app that fetches current conditions from OpenWeath
 This project is a static site located under `docs/`:
 - `docs/index.html`: UI markup and inputs
 - `docs/css/style.css`: Styling
-- `docs/js/index.js`: Client-side logic using `fetch` to call OpenWeather
+- `docs/js/index.js`: Client-side logic using `fetch` to call OpenWeather and GitHub APIs
 
 Search for a city, and the app shows:
 - City and country
 - Temperature in °C
 - Weather description
+- Project collaborators (fetched from GitHub API)
 
 ## Requirements
 
