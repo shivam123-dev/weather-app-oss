@@ -48,16 +48,16 @@ A deploy workflow is set up to publish `docs/` to GitHub Pages (`.github/workflo
 
 ## Contributing
 
-Please read `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` before opening issues or pull requests.
+Please read [`CODE_OF_CONDUCT`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CODE_OF_CONDUCT.md) and [`CONTRIBUTING`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CONTRIBUTING.md) before opening issues or pull requests.
 
 ## Code of Conduct
 
-We adopt the Contributor Covenant. See `CODE_OF_CONDUCT.md`.
+We adopt the Contributor Covenant. See [`CODE_OF_CONDUCT`](https://github.com/shivam123-dev/weather-app-oss/blob/main/CODE_OF_CONDUCT.md).
 
 ## Security
 
-Please follow the guidance in `SECURITY.md` for reporting vulnerabilities.
+Please follow the guidance in [`SECURITY`](https://github.com/shivam123-dev/weather-app-oss/blob/main/SECURITY.md) for reporting vulnerabilities.
 
 ## License
 
-Licensed under the MIT License. See `LICENSE` for details.
+Licensed under the MIT License. See [`LICENSE`](https://github.com/shivam123-dev/weather-app-oss/blob/main/SECURITY.md) for details.
