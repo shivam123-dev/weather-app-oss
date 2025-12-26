@@ -15,6 +15,20 @@ Search for a city, and the app shows:
 - City and country
 - Temperature in °C
 - Weather description
+- An AI-style weather quote/tip (Gemini if configured, otherwise local fallback)
+- A dynamic background based on the current condition
+- A dark/light theme toggle (auto by time, manual toggle saved in localStorage)
+
+## Gemini (AI Quotes)
+
+This demo calls Gemini directly from the browser (client-side).
+
+1) Open `docs/js/index.js`
+2) Set `GEMINI_API_KEY` to your API key
+
+Notes:
+- Client-side API keys are visible to anyone who loads the site.
+- For public deployments, proxy Gemini through a backend.
 
 ## Requirements
 

@@ -13,7 +13,12 @@
 <body>
     <div class="container">
         <br>
-        <h1>Weather App</h1>
+        <div class="topbar">
+            <h1>Weather App</h1>
+            <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+                🌙
+            </button>
+        </div>
         <form>
             <input type="text" name="city" id="searchCity" placeholder="Search for a city">
             <input type="submit" value="SEARCH" id="submit">
@@ -22,6 +27,7 @@
             <div class="city" id="city">-------,--</div>
             <div class="temp" id="temp">--- &deg;C</div>
             <div class="weather-text" id="weather-text">-----------</div>
+            <div class="quote" id="quote">Search a city to get a weather tip.</div>
 
         </div>
     </div>
