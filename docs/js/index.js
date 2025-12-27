@@ -393,8 +393,8 @@ function sanitizeTipAndCloser(text, forbiddenTerms) {
         .replace(/[\r\n]+/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
-        .replace(/^['"`]+/, '')
-        .replace(/['"`]+$/, '')
+        .replace(/^["'`]+/, '')
+        .replace(/["'`]+$/, '')
         .trim();
 
     // Must be two sentences. Keep first two only.
