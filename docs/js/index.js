@@ -65,7 +65,11 @@ async function showReport(weatherData) {
     // Use the 'temp' element id (ensure index.html matches)
     const tempElement = document.getElementById('temp');
     const t = weatherData.main?.temp;
-    tempElement.innerHTML = (t != null) ? `${Math.round(t)} &deg;C` : '—';
+    if (t != null) {
+        animateTemperature(tempElement, Math.round(t));
+    } else {
+        tempElement.innerHTML = '—';
+    }
 
     const weatherTextElement = document.getElementById('weather-text');
     const weatherMain = weatherData.weather?.[0]?.main ?? '—';
@@ -389,4 +393,48 @@ function sanitizeTipAndCloser(text, forbiddenTerms) {
     }
 
     return two;
+}
+
+/**
+ * Animate temperature count-up using CSS animation of a custom property.
+ * CSS animates --temp from 0 to --temp-target; JS reads it each frame to render text.
+ */
+function animateTemperature(el, target) {
+    try {
+        // Set target and trigger animation class
+        el.style.setProperty('--temp-target', target);
+        el.classList.add('temp--animating');
+
+        let last = NaN;
+        let rafId = 0;
+        const update = () => {
+            const v = parseFloat(getComputedStyle(el).getPropertyValue('--temp'));
+            if (!Number.isNaN(v)) {
+                const n = Math.round(v);
+                if (n !== last) {
+                    last = n;
+                    el.innerHTML = `${n} &deg;C`;
+                }
+            }
+            rafId = requestAnimationFrame(update);
+        };
+        update();
+
+        const finish = () => {
+            cancelAnimationFrame(rafId);
+            el.classList.remove('temp--animating');
+            el.innerHTML = `${Math.round(target)} &deg;C`;
+        };
+
+        // End when CSS animation completes (preferred)
+        el.addEventListener('animationend', finish, { once: true });
+        // Fallback safety: finish after ~2s even if event not fired
+        setTimeout(() => {
+            // If still animating, finish gracefully
+            if (el.classList.contains('temp--animating')) finish();
+        }, 2000);
+    } catch (e) {
+        // Absolute fallback: set directly
+        el.innerHTML = `${Math.round(target)} &deg;C`;
+    }
 }
