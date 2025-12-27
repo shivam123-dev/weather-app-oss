@@ -3,14 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "node server.js",
     "preview": "npx serve -s docs -l 8080",
     "lint": "eslint docs/js/index.js"
   },
-  "dependencies": {
-    "express": "^4.18.2",
-    "openai": "^4.58.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^9.13.0",
     "serve": "^14.2.3"
