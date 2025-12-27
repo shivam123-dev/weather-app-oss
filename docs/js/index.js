@@ -323,7 +323,8 @@ function seededRng(seedText) {
 }
 
 async function generateGeminiQuote({ apiKey, city, conditionGroup, weatherMain, weatherDesc, tempC, humidity, windMs }) {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+    // Use latest alias to avoid 404 for deprecated model names
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${encodeURIComponent(apiKey)}`;
 
     const tempRounded = (typeof tempC === 'number') ? Math.round(tempC) : null;
     const windRounded = (typeof windMs === 'number') ? Math.round(windMs) : null;
@@ -537,42 +538,37 @@ function renderSunTimes(weatherData){
             }
         }
 
-    const fmt = (secUtc) => {
-        const ms = (secUtc + tzOffset) * 1000;
-        const d = new Date(ms);
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    };
+        const fmtLocal = (secUtc) => {
+            const ms = (secUtc + tzOffset) * 1000;
+            const d = new Date(ms);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        };
 
-    labelEl.textContent = `${fmt(sunrise)} / ${fmt(sunset)}`;
+        labelEl.textContent = `${fmtLocal(sunrise)} / ${fmtLocal(sunset)}`;
 
-    const nowUtcSec = Math.floor(Date.now() / 1000);
-    const nowLocSec = nowUtcSec; // we add tzOffset below when comparing
+        // Compute progress strictly in UTC seconds to avoid mixing bases
+        const nowUtcSec = Math.floor(Date.now() / 1000);
+        let frac = 0;
+        let remainingSec = 0;
+        if (nowUtcSec <= sunrise) {
+            frac = 0;
+            remainingSec = sunrise - nowUtcSec;
+        } else if (nowUtcSec >= sunset) {
+            frac = 1;
+            remainingSec = (sunrise + 24 * 3600) - nowUtcSec; // approx until next sunrise
+        } else {
+            frac = (nowUtcSec - sunrise) / (sunset - sunrise);
+            remainingSec = sunset - nowUtcSec;
+        }
 
-    const start = sunrise + 0; // local compared via offset
-    const end = sunset + 0;
-    const nowAdj = nowLocSec + tzOffset;
+        frac = Math.max(0, Math.min(1, frac));
+        const offset = circumference * (1 - frac);
+        ring.style.strokeDasharray = `${circumference}`;
+        ring.style.strokeDashoffset = `${offset}`;
 
-    let frac = 0;
-    let remainingSec = 0;
-    if (nowAdj <= start) {
-        frac = 0;
-        remainingSec = start - nowAdj;
-    } else if (nowAdj >= end) {
-        frac = 0;
-        remainingSec = (start + 24 * 3600) - nowAdj; // until next sunrise roughly
-    } else {
-        frac = (nowAdj - start) / (end - start);
-        remainingSec = end - nowAdj;
-    }
-
-    frac = Math.max(0, Math.min(1, frac));
-    const offset = circumference * (1 - frac);
-    ring.style.strokeDasharray = `${circumference}`;
-    ring.style.strokeDashoffset = `${offset}`;
-
-    const hrs = Math.floor(remainingSec / 3600);
-    const mins = Math.floor((remainingSec % 3600) / 60);
-    remEl.textContent = `Time remaining: ${hrs}h ${mins}m`;
+        const hrs = Math.floor(remainingSec / 3600);
+        const mins = Math.floor((remainingSec % 3600) / 60);
+        remEl.textContent = `Time remaining: ${hrs}h ${mins}m`;
     };
 
     proceed();
