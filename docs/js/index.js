@@ -496,15 +496,46 @@ function getLastWeather(){
 
 // -------------------- Sunrise / Sunset --------------------
 function renderSunTimes(weatherData){
-    const sunrise = weatherData?.sys?.sunrise; // unix UTC seconds
-    const sunset = weatherData?.sys?.sunset;   // unix UTC seconds
+    let sunrise = weatherData?.sys?.sunrise; // unix UTC seconds
+    let sunset = weatherData?.sys?.sunset;   // unix UTC seconds
     const tzOffset = weatherData?.timezone ?? 0; // seconds offset from UTC
     const labelEl = document.getElementById('sunTimesLabel');
     const remEl = document.getElementById('sunRemaining');
     const ring = document.querySelector('.ring-progress');
     const circumference = 2 * Math.PI * 54; // r=54
 
-    if (!(sunrise && sunset && ring && labelEl && remEl)) return;
+    if (!(ring && labelEl && remEl)) return;
+
+    // Fallback: if sunrise/sunset missing, query sunrise-sunset.org via coords
+    const tryFallback = async () => {
+        const lat = weatherData?.coord?.lat;
+        const lon = weatherData?.coord?.lon;
+        if (typeof lat !== 'number' || typeof lon !== 'number') return false;
+        try {
+            const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            const srIso = data?.results?.sunrise;
+            const ssIso = data?.results?.sunset;
+            if (srIso && ssIso) {
+                sunrise = Math.floor(new Date(srIso).getTime() / 1000); // UTC seconds
+                sunset = Math.floor(new Date(ssIso).getTime() / 1000);  // UTC seconds
+                return true;
+            }
+        } catch {}
+        return false;
+    };
+
+    const proceed = async () => {
+        if (!(typeof sunrise === 'number' && typeof sunset === 'number')) {
+            const ok = await tryFallback();
+            if (!ok) {
+                // Could not resolve; show placeholders
+                labelEl.textContent = `--:-- / --:--`;
+                remEl.textContent = `Time remaining: --`;
+                return;
+            }
+        }
 
     const fmt = (secUtc) => {
         const ms = (secUtc + tzOffset) * 1000;
@@ -542,17 +573,50 @@ function renderSunTimes(weatherData){
     const hrs = Math.floor(remainingSec / 3600);
     const mins = Math.floor((remainingSec % 3600) / 60);
     remEl.textContent = `Time remaining: ${hrs}h ${mins}m`;
+    };
+
+    proceed();
 }
 
 // -------------------- Wind Compass --------------------
 function renderWind(weatherData){
-    const deg = weatherData?.wind?.deg;
-    const speed = weatherData?.wind?.speed;
+    let deg = weatherData?.wind?.deg;
+    let speed = weatherData?.wind?.speed;
     const arrow = document.getElementById('compassArrow');
     const speedEl = document.getElementById('windSpeed');
     const degEl = document.getElementById('windDeg');
-    if (speedEl) speedEl.textContent = (typeof speed === 'number') ? `${Math.round(speed)} m/s` : '-- m/s';
-    if (degEl) degEl.textContent = (typeof deg === 'number') ? `${Math.round(deg)}°` : '--°';
+    const updateLabels = () => {
+        if (speedEl) speedEl.textContent = (typeof speed === 'number') ? `${Math.round(speed)} m/s` : '-- m/s';
+        if (degEl) degEl.textContent = (typeof deg === 'number') ? `${Math.round(deg)}°` : '--°';
+    };
+
+    updateLabels();
+
+    if (!(typeof deg === 'number')) {
+        // Fallback: fetch forecast and use nearest wind direction
+        const city = weatherData?.name;
+        if (city) {
+            (async () => {
+                try {
+                    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API.key}&units=metric`;
+                    const resp = await fetch(url);
+                    const data = await resp.json();
+                    const item = Array.isArray(data?.list) ? data.list[0] : null;
+                    const w = item?.wind;
+                    if (w) {
+                        if (typeof w.speed === 'number' && typeof speed !== 'number') speed = w.speed;
+                        if (typeof w.deg === 'number') deg = w.deg;
+                        updateLabels();
+                        if (arrow && typeof deg === 'number') {
+                            arrow.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
+                            arrow.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+                        }
+                    }
+                } catch {}
+            })();
+        }
+    }
+
     if (!arrow || typeof deg !== 'number') return;
     arrow.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
     arrow.style.transform = `translateX(-50%) rotate(${deg}deg)`;
