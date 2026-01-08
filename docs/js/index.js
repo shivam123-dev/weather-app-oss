@@ -11,15 +11,15 @@ const API = {
 const STORAGE_KEYS = {
     themePreference: 'weatherApp.themePreference', // 'light' | 'dark' | 'auto'
     lastWeather: 'weatherApp.lastWeather',
+    tempUnit: 'weatherApp.tempUnit', // 'celsius' | 'fahrenheit'
 };
 
 const searchBtn = document.getElementById('submit');
 const searchCity = document.getElementById('searchCity');
 const searchForm = document.querySelector('form');
 const offlineBanner = document.getElementById('offlineBanner');
-
-
 const themeToggleBtn = document.getElementById('themeToggle');
+const unitToggleBtn = document.getElementById('unitToggle');
 
 const WEATHER_BG_CLASSES = [
     'weather--clear',
@@ -35,6 +35,7 @@ const WEATHER_BG_CLASSES = [
 const THEME_CLASSES = ['theme--light', 'theme--dark'];
 
 initTheme();
+initTempUnit();
 initOfflineMode();
 
 if (searchForm) {
@@ -56,7 +57,8 @@ if (searchForm) {
                 }
             }
 
-            const url = `${API.baseUrl}?q=${encodeURIComponent(cityName)}&appid=${API.key}&units=metric`;
+            const units = getTempUnit() === 'celsius' ? 'metric' : 'imperial';
+            const url = API.baseUrl + '?q=' + encodeURIComponent(cityName) + '&appid=' + API.key + '&units=' + units;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -77,7 +79,7 @@ if (searchForm) {
 async function showReport(weatherData) {
     try { cacheLastWeather(weatherData); } catch {}
     const cityElement = document.getElementById('city');
-    cityElement.innerText = `${weatherData.name}, ${weatherData.sys?.country ?? ''}`.trim();
+    cityElement.innerText = (weatherData.name + ', ' + (weatherData.sys?.country ?? '')).trim();
 
     // Use the 'temp' element id (ensure index.html matches)
     const tempElement = document.getElementById('temp');
@@ -142,6 +144,42 @@ async function showReport(weatherData) {
     renderWind(weatherData);
 }
 
+function initTempUnit() {
+    const preference = getTempUnit();
+    updateUnitToggleButton(preference);
+
+    if (unitToggleBtn) {
+        unitToggleBtn.addEventListener('click', () => {
+            const current = getTempUnit();
+            const next = current === 'celsius' ? 'fahrenheit' : 'celsius';
+            setTempUnit(next);
+            updateUnitToggleButton(next);
+            
+            // Re-fetch weather with new units if we have cached data
+            const cached = getLastWeather();
+            if (cached && cached.name) {
+                searchCity.value = cached.name;
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    }
+}
+
+function getTempUnit() {
+    const value = (localStorage.getItem(STORAGE_KEYS.tempUnit) || 'celsius').toLowerCase();
+    return (value === 'fahrenheit') ? 'fahrenheit' : 'celsius';
+}
+
+function setTempUnit(value) {
+    localStorage.setItem(STORAGE_KEYS.tempUnit, value);
+}
+
+function updateUnitToggleButton(unit) {
+    if (!unitToggleBtn) return;
+    unitToggleBtn.textContent = unit === 'celsius' ? '°C' : '°F';
+    unitToggleBtn.title = 'Toggle to ' + (unit === 'celsius' ? '°F' : '°C');
+}
+
 function initTheme() {
     // Default behavior: auto switch based on local time.
     const preference = getThemePreference();
@@ -184,7 +222,7 @@ function updateThemeToggleIcon(preference, resolved) {
     const isDarkNow = resolved === 'dark';
     themeToggleBtn.textContent = isDarkNow ? '☀️' : '🌙';
     const titleSuffix = preference === 'auto' ? ' (auto)' : '';
-    themeToggleBtn.title = `Toggle theme${titleSuffix}`;
+    themeToggleBtn.title = 'Toggle theme' + titleSuffix;
 }
 
 function getThemePreference() {
@@ -288,14 +326,14 @@ function generateWeatherQuote({ city, conditionGroup, weatherMain, weatherDesc, 
         'Keep it simple and steady.'
     ];
 
-    const seedKey = `${city}|${conditionGroup}|${new Date().toDateString()}`;
+    const seedKey = city + '|' + conditionGroup + '|' + new Date().toDateString();
     const rng = seededRng(seedKey);
     const advice = pick(adviceByGroup[conditionGroup] || adviceByGroup.clear, rng);
     const closer = pick(closers, rng);
 
     // Output only the quote line (tip + closer), no city/metrics/weather labels.
-    // Example desired: “Drive carefully—visibility can change quickly. Make it a good day.”
-    return `${advice} ${closer}`;
+    // Example desired: "Drive carefully—visibility can change quickly. Make it a good day."
+    return advice + ' ' + closer;
 }
 
 function pick(list, rng) {
@@ -322,7 +360,7 @@ function seededRng(seedText) {
 
 async function generateGeminiQuote({ apiKey, city, conditionGroup, weatherMain, weatherDesc, tempC, humidity, windMs }) {
     // Use stable v1 endpoint; v1beta can 404 for latest aliases
-    const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const endpoint = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=' + encodeURIComponent(apiKey);
 
     const tempRounded = (typeof tempC === 'number') ? Math.round(tempC) : null;
     const windRounded = (typeof windMs === 'number') ? Math.round(windMs) : null;
@@ -331,7 +369,7 @@ async function generateGeminiQuote({ apiKey, city, conditionGroup, weatherMain, 
     const prompt = [
         'Write ONE short, quote-like message in TWO sentences:',
         'Sentence 1: a practical tip containing exactly one em dash (—).',
-        'Sentence 2: a short closer like “Make it a good day.”',
+        'Sentence 2: a short closer like "Make it a good day."',
         'Tone: calm, helpful, not descriptive or report-like.',
         'Hard rules:',
         '- Do NOT mention the city name.',
@@ -340,13 +378,13 @@ async function generateGeminiQuote({ apiKey, city, conditionGroup, weatherMain, 
         '- No emojis. No hashtags. No lists.',
         '- Output ONLY the two-sentence quote.',
         '',
-        'Use these signals only to decide the advice (don’t repeat them):',
-        `City: ${city}`,
-        `Condition: ${weatherMain}${weatherDesc ? ` (${weatherDesc})` : ''}`,
-        `Condition group: ${conditionGroup}`,
-        `TempC: ${tempRounded ?? 'unknown'}`,
-        `Wind m/s: ${windRounded ?? 'unknown'}`,
-        `Humidity %: ${humidityRounded ?? 'unknown'}`
+        'Use these signals only to decide the advice (don\'t repeat them):',
+        'City: ' + city,
+        'Condition: ' + weatherMain + (weatherDesc ? ' (' + weatherDesc + ')' : ''),
+        'Condition group: ' + conditionGroup,
+        'TempC: ' + (tempRounded ?? 'unknown'),
+        'Wind m/s: ' + (windRounded ?? 'unknown'),
+        'Humidity %: ' + (humidityRounded ?? 'unknown')
     ].join('\n');
 
     const resp = await fetch(endpoint, {
@@ -423,6 +461,9 @@ function sanitizeTipAndCloser(text, forbiddenTerms) {
  */
 function animateTemperature(el, target) {
     try {
+        const unit = getTempUnit();
+        const unitSymbol = unit === 'celsius' ? 'C' : 'F';
+        
         // Set target and trigger animation class
         el.style.setProperty('--temp-target', target);
         el.classList.add('temp--animating');
@@ -435,7 +476,7 @@ function animateTemperature(el, target) {
                 const n = Math.round(v);
                 if (n !== last) {
                     last = n;
-                    el.innerHTML = `${n} &deg;C`;
+                    el.innerHTML = n + ' &deg;' + unitSymbol;
                 }
             }
             rafId = requestAnimationFrame(update);
@@ -445,7 +486,7 @@ function animateTemperature(el, target) {
         const finish = () => {
             cancelAnimationFrame(rafId);
             el.classList.remove('temp--animating');
-            el.innerHTML = `${Math.round(target)} &deg;C`;
+            el.innerHTML = Math.round(target) + ' &deg;' + unitSymbol;
         };
 
         // End when CSS animation completes (preferred)
@@ -457,7 +498,9 @@ function animateTemperature(el, target) {
         }, 2000);
     } catch (e) {
         // Absolute fallback: set directly
-        el.innerHTML = `${Math.round(target)} &deg;C`;
+        const unit = getTempUnit();
+        const unitSymbol = unit === 'celsius' ? 'C' : 'F';
+        el.innerHTML = Math.round(target) + ' &deg;' + unitSymbol;
     }
 }
 
@@ -511,7 +554,7 @@ function renderSunTimes(weatherData){
         const lon = weatherData?.coord?.lon;
         if (typeof lat !== 'number' || typeof lon !== 'number') return false;
         try {
-            const url = `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`;
+            const url = 'https://api.sunrise-sunset.org/json?lat=' + lat + '&lng=' + lon + '&formatted=0';
             const resp = await fetch(url);
             const data = await resp.json();
             const srIso = data?.results?.sunrise;
@@ -530,8 +573,8 @@ function renderSunTimes(weatherData){
             const ok = await tryFallback();
             if (!ok) {
                 // Could not resolve; show placeholders
-                labelEl.textContent = `--:-- / --:--`;
-                remEl.textContent = `Time remaining: --`;
+                labelEl.textContent = '--:-- / --:--';
+                remEl.textContent = 'Time remaining: --';
                 return;
             }
         }
@@ -542,7 +585,7 @@ function renderSunTimes(weatherData){
             return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         };
 
-        labelEl.textContent = `${fmtLocal(sunrise)} / ${fmtLocal(sunset)}`;
+        labelEl.textContent = fmtLocal(sunrise) + ' / ' + fmtLocal(sunset);
 
         // Compute progress strictly in UTC seconds to avoid mixing bases
         const nowUtcSec = Math.floor(Date.now() / 1000);
@@ -561,12 +604,12 @@ function renderSunTimes(weatherData){
 
         frac = Math.max(0, Math.min(1, frac));
         const offset = circumference * (1 - frac);
-        ring.style.strokeDasharray = `${circumference}`;
-        ring.style.strokeDashoffset = `${offset}`;
+        ring.style.strokeDasharray = '' + circumference;
+        ring.style.strokeDashoffset = '' + offset;
 
         const hrs = Math.floor(remainingSec / 3600);
         const mins = Math.floor((remainingSec % 3600) / 60);
-        remEl.textContent = `Time remaining: ${hrs}h ${mins}m`;
+        remEl.textContent = 'Time remaining: ' + hrs + 'h ' + mins + 'm';
     };
 
     proceed();
@@ -579,9 +622,13 @@ function renderWind(weatherData){
     const arrow = document.getElementById('compassArrow');
     const speedEl = document.getElementById('windSpeed');
     const degEl = document.getElementById('windDeg');
+    
+    const unit = getTempUnit();
+    const speedUnit = unit === 'celsius' ? 'm/s' : 'mph';
+    
     const updateLabels = () => {
-        if (speedEl) speedEl.textContent = (typeof speed === 'number') ? `${Math.round(speed)} m/s` : '-- m/s';
-        if (degEl) degEl.textContent = (typeof deg === 'number') ? `${Math.round(deg)}°` : '--°';
+        if (speedEl) speedEl.textContent = (typeof speed === 'number') ? (Math.round(speed) + ' ' + speedUnit) : ('-- ' + speedUnit);
+        if (degEl) degEl.textContent = (typeof deg === 'number') ? (Math.round(deg) + '°') : '--°';
     };
 
     updateLabels();
@@ -592,7 +639,8 @@ function renderWind(weatherData){
         if (city) {
             (async () => {
                 try {
-                    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API.key}&units=metric`;
+                    const units = unit === 'celsius' ? 'metric' : 'imperial';
+                    const url = 'https://api.openweathermap.org/data/2.5/forecast?q=' + encodeURIComponent(city) + '&appid=' + API.key + '&units=' + units;
                     const resp = await fetch(url);
                     const data = await resp.json();
                     const item = Array.isArray(data?.list) ? data.list[0] : null;
@@ -603,7 +651,7 @@ function renderWind(weatherData){
                         updateLabels();
                         if (arrow && typeof deg === 'number') {
                             arrow.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
-                            arrow.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+                            arrow.style.transform = 'translateX(-50%) rotate(' + deg + 'deg)';
                         }
                     }
                 } catch {}
@@ -613,7 +661,7 @@ function renderWind(weatherData){
 
     if (!arrow || typeof deg !== 'number') return;
     arrow.style.transition = 'transform 600ms cubic-bezier(0.23, 1, 0.32, 1)';
-    arrow.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+    arrow.style.transform = 'translateX(-50%) rotate(' + deg + 'deg)';
 }
 
 // (Charts removed per request)
