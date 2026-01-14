@@ -113,3 +113,41 @@ Report vulnerabilities per [SECURITY.md](SECURITY.md).
 ## License
 MIT License. See [LICENSE](LICENSE).
 
+
+## Deploying Safely
+
+Avoid exposing API keys in client-side code when deploying publicly. Use a small backend proxy so the key lives on the server.
+
+Example (Node/Express):
+```js
+// server.js
+import express from 'express';
+import fetch from 'node-fetch';
+const app = express();
+
+app.get('/api/weather', async (req, res) => {
+  const q = String(req.query.q || '').trim();
+  if (!q) return res.status(400).json({ error: 'Missing city query param ?q=' });
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(q)}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`;
+  const resp = await fetch(url);
+  const text = await resp.text();
+  res.status(resp.status).type('json').send(text);
+});
+
+app.listen(process.env.PORT || 3000);
+```
+
+Client usage:
+```js
+// docs/js/index.js (replace fetch to OpenWeather with your proxy)
+const response = await fetch(`/api/weather?q=${encodeURIComponent(cityName)}`);
+```
+
+Environment and git hygiene:
+- Store secrets in `.env` (e.g., `OPENWEATHER_API_KEY=...`).
+- Add `.env` to `.gitignore` to avoid committing secrets.
+
+```gitignore
+# Secrets
+.env
+```
