@@ -105,10 +105,11 @@ The response populates elements `#city`, `#temp`, and `#weather-text`. Sunrise/s
 - Additional accessibility refinements (labels, focus management)
 
 ## Contributing
-Please read `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` before opening issues or pull requests.
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [CONTRIBUTING.md](CONTRIBUTING.md) before opening issues or pull requests.
 
 ## Security
-Report vulnerabilities per `SECURITY.md`.
+Report vulnerabilities per [SECURITY.md](SECURITY.md).
 
 ## License
-MIT License. See `LICENSE`.
+MIT License. See [LICENSE](LICENSE).
+
