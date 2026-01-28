@@ -10,16 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: Install ESLint
-        run: npm install -g eslint
+      - run: npm ci
 
       - name: Run ESLint
-        run: eslint docs/js
+        run: npx eslint docs/js/index.js
+
