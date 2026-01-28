@@ -14,7 +14,6 @@ const STORAGE_KEYS = {
     tempUnit: 'weatherApp.tempUnit', // 'celsius' | 'fahrenheit'
 };
 
-const searchBtn = document.getElementById('submit');
 const searchCity = document.getElementById('searchCity');
 const searchForm = document.querySelector('form');
 const offlineBanner = document.getElementById('offlineBanner');
@@ -77,7 +76,7 @@ if (searchForm) {
 }
 
 async function showReport(weatherData) {
-    try { cacheLastWeather(weatherData); } catch {}
+    try { cacheLastWeather(weatherData); } catch (err) { console.warn('Failed to cache weather data', err); }
     const cityElement = document.getElementById('city');
     cityElement.innerText = (weatherData.name + ', ' + (weatherData.sys?.country ?? '')).trim();
 
@@ -133,8 +132,8 @@ async function showReport(weatherData) {
             });
 
             quoteElement.textContent = aiQuote || fallbackQuote;
-        } catch (e) {
-            console.warn('Gemini quote failed; using fallback quote.', e);
+        } catch (err) {
+            console.warn('Gemini quote failed; using fallback quote.', err);
             quoteElement.textContent = fallbackQuote;
         }
     }
@@ -496,8 +495,9 @@ function animateTemperature(el, target) {
             // If still animating, finish gracefully
             if (el.classList.contains('temp--animating')) finish();
         }, 2000);
-    } catch (e) {
-        // Absolute fallback: set directly
+    } catch (err) {
+        console.warn('Temperature animation failed', err);
+	// Absolute fallback: set directly
         const unit = getTempUnit();
         const unitSymbol = unit === 'celsius' ? 'C' : 'F';
         el.innerHTML = Math.round(target) + ' &deg;' + unitSymbol;
@@ -531,7 +531,7 @@ function getLastWeather(){
     try {
         const raw = localStorage.getItem(STORAGE_KEYS.lastWeather);
         return raw ? JSON.parse(raw) : null;
-    } catch { return null; }
+    } catch (err) { console.warn('Failed to read cached weather', err); return null; }
 }
 
 // (Recent & Favorite features removed per request)
@@ -564,7 +564,7 @@ function renderSunTimes(weatherData){
                 sunset = Math.floor(new Date(ssIso).getTime() / 1000);  // UTC seconds
                 return true;
             }
-        } catch {}
+        } catch (err) { console.warn('Sunrise/sunset fallback failed', err); }
         return false;
     };
 
@@ -654,7 +654,7 @@ function renderWind(weatherData){
                             arrow.style.transform = 'translateX(-50%) rotate(' + deg + 'deg)';
                         }
                     }
-                } catch {}
+                } catch (err) { console.warn('Wind forecast fallback failed', err); }
             })();
         }
     }
