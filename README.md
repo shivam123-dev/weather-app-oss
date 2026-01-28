@@ -1,5 +1,10 @@
 # Weather App (OSS)
 
+![ESLint](https://github.com/shivam123-dev/weather-app-oss/actions/workflows/eslint.yml/badge.svg)
+![Lighthouse](https://github.com/shivam123-dev/weather-app-oss/actions/workflows/lighthouse.yml/badge.svg)
+
+A simple, client-side weather app that fetches current conditions from OpenWeather API.
+
 A simple, client-side weather app that fetches current conditions from OpenWeather API. No Node.js or backend required — just HTML, CSS, and JavaScript inside `docs/`.
 
 - Project repository: https://github.com/shivam123-dev/weather-app-oss
