@@ -1,0 +1,31 @@
+{
+  "name": "weather-app-oss",
+  "version": "1.0.0",
+  "description": "Weather app with ESLint and Lighthouse CI",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint": "eslint \"docs/js/**/*.js\"",
+    "test": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bn8204/weather-app-oss.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bn8204/weather-app-oss/issues"
+  },
+  "homepage": "https://github.com/bn8204/weather-app-oss#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2"
+  }
+}
+
