@@ -20,6 +20,7 @@ const searchForm = document.querySelector('form');
 const offlineBanner = document.getElementById('offlineBanner');
 const themeToggleBtn = document.getElementById('themeToggle');
 const unitToggleBtn = document.getElementById('unitToggle');
+const loader = document.getElementById('loader');
 
 const WEATHER_BG_CLASSES = [
     'weather--clear',
@@ -48,6 +49,7 @@ if (searchForm) {
         }
 
         try {
+            loader.hidden = false;
             if (!navigator.onLine) {
                 showOfflineBanner(true);
                 const cached = getLastWeather();
@@ -72,6 +74,9 @@ if (searchForm) {
         } catch (err) {
             alert('Network error. Please try again.');
             console.error(err);
+        }
+        finally {
+        loader.hidden = true;
         }
     });
 }
