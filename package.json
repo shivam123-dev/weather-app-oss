@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint \"docs/js/**/*.js\"",
-    "test": "npm run lint"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,9 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   }
 }
 

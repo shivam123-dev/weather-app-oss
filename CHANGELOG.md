@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here. Entries are listed in reverse chronological order. Each entry includes the GitHub username of the commit author.
 
+## 2026-01-29
+- tests: add Jest + jsdom setup and two basic initialization tests — by @shivam123-dev
+- chore: update test script to run Jest — by @shivam123-dev
+
 ## 2026-01-28
 - ci: disable no-undef for browser runtime (Fixes #9) — by @bn8204 ([a22e0f8](https://github.com/shivam123-dev/weather-app-oss/commit/a22e0f8f25a9942c143a119bc599132bd345cd3d))
 - ci: disable no-undef for browser runtime — by @bn8204 ([093c4eb](https://github.com/shivam123-dev/weather-app-oss/commit/093c4eb3db5a59edafbb5bcc03ecdd98d7f5d1c9))
