@@ -66,6 +66,10 @@ The response is parsed and rendered into elements with IDs `city`, `temp`, and `
 - Network errors: check internet connectivity and that the request URL matches the documented endpoint.
 - Content not updating: verify the element IDs in `index.html` match those used in `index.js`.
 
+## Changelog
+
+See the project changelog at [`CHANGELOG.md`](./CHANGELOG.md).
+
 ## Contributing
 
 Please read [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) and [`CONTRIBUTING.md`](./CONTRIBUTING.md) before opening issues or pull requests.
