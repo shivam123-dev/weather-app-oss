@@ -1,5 +1,5 @@
 {
-  "name": "weather-app-oss",
+  "name": "@shivam123-dev/weather-app-oss",
   "version": "0.1.0",
   "description": "Weather app with ESLint and Lighthouse CI",
   "main": "index.js",
@@ -23,6 +23,9 @@
   "homepage": "https://github.com/shivam123-dev/weather-app-oss#readme",
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "docs",
