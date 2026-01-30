@@ -1,6 +1,6 @@
 {
   "name": "weather-app-oss",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Weather app with ESLint and Lighthouse CI",
   "main": "index.js",
   "directories": {
@@ -12,18 +12,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bn8204/weather-app-oss.git"
+    "url": "git+https://github.com/shivam123-dev/weather-app-oss.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bn8204/weather-app-oss/issues"
+    "url": "https://github.com/shivam123-dev/weather-app-oss/issues"
   },
-  "homepage": "https://github.com/bn8204/weather-app-oss#readme",
+  "homepage": "https://github.com/shivam123-dev/weather-app-oss#readme",
   "engines": {
     "node": ">=20"
   },
+  "files": [
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "eslint": "^9.39.2",
     "jest": "^29.7.0",
