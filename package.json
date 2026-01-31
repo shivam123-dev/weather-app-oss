@@ -1,6 +1,6 @@
 {
   "name": "@shivam123-dev/weather-app-oss",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Weather app with ESLint and Lighthouse CI",
   "main": "index.js",
   "directories": {

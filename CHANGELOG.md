@@ -4,6 +4,7 @@ All notable changes to this project are documented here. Entries are listed in r
 
 ## 2026-01-31
 - fix(tooling): consolidate ESLint and add Prettier formatter (#18) — by @2024si96557-ship-it ([f793ac4](https://github.com/shivam123-dev/weather-app-oss/commit/f793ac4adb3035b15491828964ebaa2f1002192c))
+- docs: add GitHub Pages deployment steps (#19) — by @Anusha0710 ([aa3d6d9](https://github.com/shivam123-dev/weather-app-oss/commit/aa3d6d9b8708a4337915c87f9bf8e9b069747b71))
 
 ## 2026-01-31
 - fix(tooling): consolidate ESLint and add Prettier formatter (#8) - by @2024si96557-ship-it
