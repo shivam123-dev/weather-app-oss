@@ -3,6 +3,9 @@
 All notable changes to this project are documented here. Entries are listed in reverse chronological order. Each entry includes the GitHub username of the commit author.
 
 ## 2026-01-31
+- fix(tooling): consolidate ESLint and add Prettier formatter (#18) — by @2024si96557-ship-it ([f793ac4](https://github.com/shivam123-dev/weather-app-oss/commit/f793ac4adb3035b15491828964ebaa2f1002192c))
+
+## 2026-01-31
 - fix(tooling): consolidate ESLint and add Prettier formatter (#8) - by @2024si96557-ship-it
 
 ## 2026-01-29
