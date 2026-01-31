@@ -8,6 +8,9 @@
   },
   "scripts": {
     "lint": "eslint \"docs/js/**/*.js\"",
+    "lint:fix": "eslint --fix \"docs/js/**/*.js\"",
+    "format": "prettier --write \"docs/**/*.{js,html,css}\"",
+    "format:check": "prettier --check \"docs/**/*.{js,html,css}\"",
     "test": "jest"
   },
   "repository": {
@@ -35,7 +38,8 @@
   "devDependencies": {
     "eslint": "^9.39.2",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.1.0"
   }
 }
 

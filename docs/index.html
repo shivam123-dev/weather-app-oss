@@ -1,75 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <br>
-        <div class="topbar">
-            <h1>Weather App</h1>
-            <button class="icon-btn" id="unitToggle" type="button" aria-label="Toggle temperature unit" title="Toggle between °C and °F">
-                °C
-            </button>
-            <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme">
-                🌙
-            </button>
-        </div>
-        <div class="banner banner--offline" id="offlineBanner" hidden>
-            Offline mode — showing last known data
-        </div>
-        <div id="loader" class="loader" hidden>
-    Loading weather...
-        </div>
-        <form>
-            <input type="text" name="city" id="searchCity" placeholder="Search for a city">
-            <input type="submit" value="SEARCH" id="submit">
-        </form>
-        <div class="card">
-            <div class="city" id="city">-------,--</div>
-            <div class="temp" id="temp">--- &deg;C</div>
-            <div class="weather-text" id="weather-text">-----------</div>
-        </div>
+      <br />
+      <div class="topbar">
+        <h1>Weather App</h1>
+        <button
+          class="icon-btn"
+          id="unitToggle"
+          type="button"
+          aria-label="Toggle temperature unit"
+          title="Toggle between °C and °F"
+        >
+          °C
+        </button>
+        <button
+          class="icon-btn"
+          id="themeToggle"
+          type="button"
+          aria-label="Toggle theme"
+          title="Toggle theme"
+        >
+          🌙
+        </button>
+      </div>
+      <div class="banner banner--offline" id="offlineBanner" hidden>
+        Offline mode — showing last known data
+      </div>
+      <div id="loader" class="loader" hidden>Loading weather...</div>
+      <form>
+        <input type="text" name="city" id="searchCity" placeholder="Search for a city" />
+        <input type="submit" value="SEARCH" id="submit" />
+      </form>
+      <div class="card">
+        <div class="city" id="city">-------,--</div>
+        <div class="temp" id="temp">--- &deg;C</div>
+        <div class="weather-text" id="weather-text">-----------</div>
+      </div>
 
-        <div class="viz-row" aria-label="Sunrise/Sunset and Wind Direction">
-            <section class="sun-card" aria-label="Sunrise and Sunset">
-                <h2 class="section-title">Sunrise / Sunset</h2>
-                <div class="sun-ring" id="sunRing">
-                    <svg class="sun-svg" width="160" height="160" viewBox="0 0 120 120" aria-hidden="true">
-                        <circle class="ring-track" cx="60" cy="60" r="54" />
-                        <circle class="ring-progress" cx="60" cy="60" r="54" />
-                    </svg>
-                    <div class="sun-text">
-                        <div id="sunTimesLabel">--:-- / --:--</div>
-                        <div id="sunRemaining">Time remaining: --</div>
-                    </div>
-                </div>
-            </section>
+      <div class="viz-row" aria-label="Sunrise/Sunset and Wind Direction">
+        <section class="sun-card" aria-label="Sunrise and Sunset">
+          <h2 class="section-title">Sunrise / Sunset</h2>
+          <div class="sun-ring" id="sunRing">
+            <svg class="sun-svg" width="160" height="160" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ring-track" cx="60" cy="60" r="54" />
+              <circle class="ring-progress" cx="60" cy="60" r="54" />
+            </svg>
+            <div class="sun-text">
+              <div id="sunTimesLabel">--:-- / --:--</div>
+              <div id="sunRemaining">Time remaining: --</div>
+            </div>
+          </div>
+        </section>
 
-            <section class="wind-card" aria-label="Wind Direction">
-                <h2 class="section-title">Wind Direction</h2>
-                <div class="compass" id="windCompass">
-                    <div class="compass-dial">
-                        <div class="compass-arrow" id="compassArrow" aria-hidden="true"></div>
-                        <div class="compass-labels" aria-hidden="true">
-                            <span>N</span><span>E</span><span>S</span><span>W</span>
-                        </div>
-                    </div>
-                    <div class="wind-meta">
-                        <span id="windSpeed">-- m/s</span>
-                        <span id="windDeg">--°</span>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <section class="wind-card" aria-label="Wind Direction">
+          <h2 class="section-title">Wind Direction</h2>
+          <div class="compass" id="windCompass">
+            <div class="compass-dial">
+              <div class="compass-arrow" id="compassArrow" aria-hidden="true"></div>
+              <div class="compass-labels" aria-hidden="true">
+                <span>N</span><span>E</span><span>S</span><span>W</span>
+              </div>
+            </div>
+            <div class="wind-meta">
+              <span id="windSpeed">-- m/s</span>
+              <span id="windDeg">--°</span>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
     <script src="js/index.js"></script>
-</body>
-
+  </body>
 </html>
