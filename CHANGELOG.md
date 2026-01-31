@@ -2,6 +2,9 @@
 
 All notable changes to this project are documented here. Entries are listed in reverse chronological order. Each entry includes the GitHub username of the commit author.
 
+## 2026-01-31
+- fix(tooling): consolidate ESLint and add Prettier formatter (#8) - by @2024si96557-ship-it
+
 ## 2026-01-29
 - tests: add Jest + jsdom setup and two basic initialization tests — by @suchira-titli
 - chore: update test script to run Jest — by @suchira-titli
