@@ -81,3 +81,22 @@ Report vulnerabilities per [`SECURITY.md`](./SECURITY.md).
 ## License
 
 Licensed under the MIT License. See [`LICENSE`](./LICENSE).
+
+## 🚀 Deploying to GitHub Pages
+
+This project can be deployed easily using **GitHub Pages**.
+
+### Steps to Deploy
+
+1. Fork or clone this repository.
+2. Push the project to your GitHub repository.
+3. Go to your repository on GitHub.
+4. Click on **Settings**.
+5. In the left sidebar, click **Pages**.
+6. Under **Source**:
+   - Select **Branch**: `main`
+   - Select **Folder**: `/docs`
+7. Click **Save**.
+
+After a few minutes, your website will be live at:
+
