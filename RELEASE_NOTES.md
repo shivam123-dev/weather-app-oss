@@ -1,4 +1,4 @@
-# v0.1.0 - First packaged release
+# v0.1.1 - Incremental release
 
 Highlights
 - Packaging: npm tarball for distribution
@@ -6,9 +6,13 @@ Highlights
 - UI/Features: Responsive UI, dark theme, offline mode, sunrise/sunset ring, wind compass, unit toggle (C/F)
 - Reliability: Browser-runtime ESLint fixes and error handling improvements
 
+Changes
+- Contributor attribution and changelog update (PR #18 credited to @2024si96557-ship-it)
+- Tooling updates (ESLint/Prettier consolidation)
+
 Install via npm (GitHub Release tarball)
 ```powershell
-npm install https://github.com/shivam123-dev/weather-app-oss/releases/download/v0.1.0/weather-app-oss-0.1.0.tgz
+npm install https://github.com/shivam123-dev/weather-app-oss/releases/download/v0.1.1/weather-app-oss-0.1.1.tgz
 ```
 
 GitHub Packages (npm.pkg.github.com)
